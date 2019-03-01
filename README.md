@@ -18,4 +18,4 @@ mv <location_of_gif_to_conga> ./original.gif
 ./script
 ```
 
-congaaa'd gif is true.gif
+congaaa'd gif is output as result.gif
