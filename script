@@ -19,6 +19,7 @@ read _ _ dim_str _ < tmp
 dims_arr=(${dims//x/ })
 
 # Get the number of pixels to shift each frame over
+width=${dims_arr[0]}
 shift=$((width / num_parts))
 
 # Iterate over every frame
