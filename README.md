@@ -1,7 +1,7 @@
 # congaaas
 Conga as a Service
 
-converts a gif to a conga-ized gif
+Converts a gif to a conga-ized gif. Looping gifs only please!
 
 ## To install:
 ```
