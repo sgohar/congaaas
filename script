@@ -22,12 +22,19 @@ dims_arr=(${dims_str//x/ })
 width=${dims_arr[0]}
 shift=$((width / num_parts))
 
+# Calculate how many frames need a pixel added to their shift to correct for the final frame offest
+frame_mod=$((width % num_parts - shift))
+offset=0
+
 # Iterate over every frame
 for filename in parts-*; do
 	# Get which frame number this image is and calculate how many pixels to shift the image
 	stripped="${filename/parts-/}"
 	file_no="${stripped/.png/}"
-	px_shift=$((file_no * shift))
+
+	# Add an offset to account widths not divisible by number of frames
+	offset=$((offset + ( file_no % frame_mod == 0 )))
+	px_shift=$(((file_no * shift) + offset))
 
 	# Shift this image left a number of pixels. -roll wraps the cut image around to the other side
 	convert $filename -roll +$px_shift+0 $filename
