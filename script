@@ -41,8 +41,7 @@ for filename in parts-*; do
 done
 
 # Create a gif from the resulting shifted frames and correct it with the true delay value
-convert -dispose previous $(ls -1 *\.png | sort -nr -k1.6) tmp.gif
-convert -delay $delay tmp.gif true.gif
+convert -dispose previous -delay $delay $(ls -1 *\.png | sort -nr -k1.6) true.gif
 
 # Clean up, clean up. Everybody everywhere.
-rm parts-* tmp*
+rm parts-* tmp
