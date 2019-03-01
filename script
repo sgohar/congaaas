@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Get the dealy between frames of the original gif.  Will be stored as "<ms>x100" where ms is the 
+# Get the delay between frames of the original gif.  Will be stored as "<ms>x100" where ms is the 
 #   number of milliseconds to pause before the next frame
 magick identify -verbose 'original.gif'[0] | grep Delay > tmp
 read delay_str < tmp
