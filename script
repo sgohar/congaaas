@@ -1,20 +1,40 @@
 #!/bin/bash
+
+# Get the dealy between frames of the original gif.  Will be stored as "<ms>x100" where ms is the 
+#   number of milliseconds to pause before the next frame
 magick identify -verbose 'original.gif'[0] | grep Delay > tmp
 read delay_str < tmp
 delay="${delay_str/Delay:/}"
+
+# Breaks the original gif into each frame as parts-0.png parts-1.png ... parts-<num_parts - 1>.png
 convert original.gif parts.png
+
+# Gets the number of frames that the original gif is composed of
 ls parts-* | wc -l > tmp
 read num_parts < tmp
+
+# Gets the dimensions of the gif
 magick identify parts-0.png > tmp
 read _ _ dim_str _ < tmp
 dims_arr=(${dims//x/ })
+
+# Get the number of pixels to shift each frame over
 shift=$((width / num_parts))
-for filename in parts-*; do 
+
+# Iterate over every frame
+for filename in parts-*; do
+	# Get which frame number this image is and calculate how many pixels to shift the image
 	stripped="${filename/parts-/}"
 	file_no="${stripped/.png/}"
-	px_shift=$((file_no * shift));
+	px_shift=$((file_no * shift))
+
+	# Shift this image over a number of pixels. -roll wraps the cut image around to the other side
 	convert $filename -roll +$px_shift+0 $filename
 done
+
+# Create a gif from the resulting shifted frames and correct it with the true delay value
 convert -dispose previous $(ls -1 *\.png | sort -n -k1.6) tmp.gif
 convert -delay $delay tmp.gif true.gif
+
+# Clean up, clean up. Everybody everywhere.
 rm parts-* tmp*
