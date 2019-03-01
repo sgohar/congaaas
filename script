@@ -1,0 +1,20 @@
+#!/bin/bash
+magick identify -verbose 'original.gif'[0] | grep Delay > tmp
+read delay_str < tmp
+delay="${delay_str/Delay:/}"
+convert original.gif parts.png
+ls parts-* | wc -l > tmp
+read num_parts < tmp
+magick identify parts-0.png > tmp
+read _ _ dim_str _ < tmp
+dims_arr=(${dims//x/ })
+shift=$((width / num_parts))
+for filename in parts-*; do 
+	stripped="${filename/parts-/}"
+	file_no="${stripped/.png/}"
+	px_shift=$((file_no * shift));
+	convert $filename -roll +$px_shift+0 $filename
+done
+convert -dispose previous $(ls -1 *\.png | sort -n -k1.6) tmp.gif
+convert -delay $delay tmp.gif true.gif
+rm parts-* tmp*
